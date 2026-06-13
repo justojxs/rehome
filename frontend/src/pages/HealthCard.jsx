@@ -12,19 +12,19 @@ function ConfidenceRing({ value, size = 120 }) {
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (value / 100) * circumference
   const color = value >= 85 ? '#10b981' : value >= 70 ? '#f59e0b' : '#ef4444'
-  const bgColor = value >= 85 ? 'from-emerald-950/20' : value >= 70 ? 'from-amber-950/20' : 'from-rose-950/20'
+  const bgColor = value >= 85 ? 'from-emerald-500/10 dark:from-emerald-950/20' : value >= 70 ? 'from-amber-500/10 dark:from-amber-950/20' : 'from-rose-500/10 dark:from-rose-950/20'
 
   return (
-    <div className={`relative inline-flex items-center justify-center bg-gradient-to-br ${bgColor} to-slate-900/40 border border-white/[0.06] rounded-full p-2`}>
+    <div className={`relative inline-flex items-center justify-center bg-gradient-to-br ${bgColor} to-slate-100/50 dark:to-slate-900/40 border border-slate-200 dark:border-white/[0.06] rounded-full p-2`}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#1e293b" strokeWidth={strokeWidth} />
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" className="stroke-slate-200 dark:stroke-slate-800" strokeWidth={strokeWidth} />
         <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={color} strokeWidth={strokeWidth}
           strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset}
           className="transition-all duration-1000 ease-out" />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-black" style={{ color }}>{value}%</span>
-        <span className="text-[8px] font-extrabold text-zinc-400 uppercase tracking-widest">Confidence</span>
+        <span className="text-[8px] font-extrabold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">Confidence</span>
       </div>
     </div>
   )
@@ -75,7 +75,7 @@ function ChevronIcon({ open }) {
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 function Skeleton({ className }) {
-  return <div className={`animate-pulse rounded-xl bg-slate-800/40 shimmer-bg ${className}`} />
+  return <div className={`animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800/40 shimmer-bg ${className}`} />
 }
 
 function LoadingSkeleton() {
@@ -104,23 +104,23 @@ function Section({ children, className = '', delay = '0ms' }) {
 
 function SectionLabel({ children }) {
   return (
-    <p className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-455 mb-4">{children}</p>
+    <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-zinc-455 mb-4">{children}</p>
   )
 }
 
 // ── Timeline ─────────────────────────────────────────────────────────────────
 function Timeline({ events }) {
   return (
-    <ol className="mt-5 space-y-0 border-l-2 border-white/10 pl-5 ml-1">
+    <ol className="mt-5 space-y-0 border-l-2 border-slate-200 dark:border-white/10 pl-5 ml-1">
       {events.map((e, i) => {
         return (
           <li key={i} className="relative mb-5 last:mb-0 animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>
             {/* Dot marker */}
-            <div className="absolute -left-[27px] top-1 h-4 w-4 rounded-full bg-gradient-to-tr from-orange-500 to-amber-450 border-2 border-[#080c14] shadow-md shadow-orange-500/20" />
+            <div className="absolute -left-[27px] top-1 h-4 w-4 rounded-full bg-gradient-to-tr from-orange-500 to-amber-450 border-2 border-white dark:border-[#080c14] shadow-sm dark:shadow-md shadow-orange-500/10 dark:shadow-orange-500/20" />
             
             <div>
-              <p className="text-xs font-bold text-slate-200">{e.event}</p>
-              <p className="text-[10px] font-bold text-slate-400 mt-0.5 uppercase tracking-wide">{e.date}</p>
+              <p className="text-xs font-bold text-slate-800 dark:text-slate-200">{e.event}</p>
+              <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-0.5 uppercase tracking-wide">{e.date}</p>
             </div>
           </li>
         )
@@ -140,7 +140,7 @@ function TrustCard({ icon, gradient, iconBg, label, children, delay = '0ms' }) {
         {icon}
       </div>
       <div>
-        <p className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-455 mb-1.5">{label}</p>
+        <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-zinc-455 mb-1.5">{label}</p>
         {children}
       </div>
     </div>
@@ -168,7 +168,7 @@ export default function HealthCard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#080c14] mesh-gradient">
+      <div className="min-h-screen mesh-gradient">
         <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 to-green-400 animate-pulse" />
         <LoadingSkeleton />
       </div>
@@ -177,16 +177,16 @@ export default function HealthCard() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-[#080c14] mesh-gradient flex items-center justify-center">
+      <div className="min-h-screen mesh-gradient flex items-center justify-center">
         <div className="text-center py-10 animate-fade-in-up">
-          <div className="h-16 w-16 mx-auto rounded-full bg-slate-900/40 flex items-center justify-center border border-white/10 mb-4">
+          <div className="h-16 w-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-900/40 flex items-center justify-center border border-slate-200 dark:border-white/10 mb-4 shadow-sm dark:shadow-md">
             <svg className="h-8 w-8 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-sm font-bold text-slate-200">Health card not found</p>
-          <p className="text-xs text-slate-400 mt-1">The product may not have been graded yet.</p>
-          <Link to="/admin" className="mt-4 inline-block text-xs font-bold text-orange-500 hover:text-orange-400 hover:underline">
+          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Health card not found</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">The product may not have been graded yet.</p>
+          <Link to="/admin" className="mt-4 inline-block text-xs font-bold text-orange-600 dark:text-orange-500 hover:text-orange-550 dark:hover:text-orange-400 hover:underline">
             ← Back to Admin Dashboard
           </Link>
         </div>
@@ -206,11 +206,11 @@ export default function HealthCard() {
   const resalePrice = suggested_resale_price || 0
 
   return (
-    <div className="min-h-screen bg-[#080c14] pb-16 mesh-gradient">
+    <div className="min-h-screen pb-16 mesh-gradient">
 
       {/* ── Verified banner ──────────────────────────────────────────────── */}
       <div
-        className="w-full py-4 px-4 flex items-center justify-center gap-3 text-emerald-400 bg-emerald-950/40 border-b border-emerald-500/25 text-xs font-black uppercase tracking-widest shadow-lg relative overflow-hidden"
+        className="w-full py-4 px-4 flex items-center justify-center gap-3 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-b border-emerald-200 dark:border-emerald-500/25 text-xs font-black uppercase tracking-widest shadow-lg relative overflow-hidden"
       >
         {/* Animated shine effect */}
         <div className="absolute inset-0 shimmer-bg opacity-10" />
@@ -224,15 +224,15 @@ export default function HealthCard() {
         {/* ── S1: Product Identity ──────────────────────────────────────── */}
         <Section delay="0ms">
           <SectionLabel>Product Identity</SectionLabel>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-100 leading-tight tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 leading-tight tracking-tight">
             {product_name}
           </h1>
           <div className="mt-4 flex flex-wrap gap-2.5 items-center">
-            <span className="font-mono text-xs font-bold bg-slate-900/50 text-slate-400 px-3 py-1.5 rounded-lg border border-white/[0.06]">
+            <span className="font-mono text-xs font-bold bg-slate-100 dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.06]">
               ID: {order_id}
             </span>
             {return_reason && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-950/20 border border-orange-500/20 px-3.5 py-1 text-xs text-orange-400 font-bold">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-500/20 px-3.5 py-1 text-xs text-orange-600 dark:text-orange-400 font-bold">
                 <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                 </svg>
@@ -260,7 +260,7 @@ export default function HealthCard() {
               </div>
               <ConditionBadge tier={ai_condition_tier || 'Pending'} />
               {ai_damage_notes && (
-                <p className="text-sm font-semibold text-slate-350 leading-relaxed bg-slate-950/40 border border-white/[0.05] px-5 py-3.5 rounded-2xl italic">
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/[0.05] px-5 py-3.5 rounded-2xl italic w-full">
                   "{ai_damage_notes}"
                 </p>
               )}
@@ -274,9 +274,9 @@ export default function HealthCard() {
           <div className="relative flex flex-col sm:flex-row items-stretch gap-4">
 
             {/* Original MRP */}
-            <div className="flex-1 rounded-2xl border border-white/[0.06] bg-slate-900/40 p-6 flex flex-col justify-center text-center sm:text-left">
-              <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Original MRP</p>
-              <p className="text-2xl font-bold text-slate-500 line-through">
+            <div className="flex-1 rounded-2xl border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-slate-900/40 p-6 flex flex-col justify-center text-center sm:text-left">
+              <p className="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Original MRP</p>
+              <p className="text-2xl font-bold text-slate-400 dark:text-slate-500 line-through">
                 ₹{mrp.toLocaleString('en-IN')}
               </p>
             </div>
@@ -292,9 +292,9 @@ export default function HealthCard() {
             )}
 
             {/* Rehome Price */}
-            <div className="flex-1 rounded-2xl border-2 border-orange-500/50 bg-orange-950/10 p-6 flex flex-col justify-center text-center sm:text-right shadow-[0_0_15px_rgba(239,68,68,0.05)]">
-              <p className="text-[10px] font-extrabold text-orange-500 uppercase tracking-widest mb-1">Rehome Price</p>
-              <p className="text-3xl font-black text-orange-500 drop-shadow-[0_0_6px_rgba(249,115,22,0.2)]">
+            <div className="flex-1 rounded-2xl border-2 border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/10 p-6 flex flex-col justify-center text-center sm:text-right shadow-[0_0_15px_rgba(239,68,68,0.05)]">
+              <p className="text-[10px] font-extrabold text-orange-600 dark:text-orange-500 uppercase tracking-widest mb-1">Rehome Price</p>
+              <p className="text-3xl font-black text-orange-600 dark:text-orange-500 drop-shadow-[0_0_6px_rgba(249,115,22,0.2)]">
                 ₹{resalePrice > 0 ? resalePrice.toLocaleString('en-IN') : '—'}
               </p>
             </div>
@@ -308,21 +308,21 @@ export default function HealthCard() {
           {/* Warranty */}
           <TrustCard
             icon={<ShieldIcon />}
-            iconBg="bg-gradient-to-tr from-emerald-500/20 to-green-450/10 border border-emerald-500/30 text-emerald-400"
+            iconBg="bg-gradient-to-tr from-emerald-50 to-emerald-100/50 dark:from-emerald-500/20 dark:to-emerald-950/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
             label="Warranty"
             delay="300ms"
           >
-            <p className="text-sm font-bold text-slate-200">{warranty_status || 'Not available'}</p>
+            <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{warranty_status || 'Not available'}</p>
           </TrustCard>
 
           {/* Refurbishment */}
           <TrustCard
             icon={<WrenchIcon />}
-            iconBg="bg-gradient-to-tr from-blue-500/20 to-indigo-400/10 border border-blue-500/30 text-blue-400"
+            iconBg="bg-gradient-to-tr from-blue-50 to-blue-100/50 dark:from-blue-500/20 dark:to-indigo-950/10 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400"
             label="Refurbishment"
             delay="400ms"
           >
-            <p className={`text-sm font-bold ${refurbishment_notes ? 'text-slate-200' : 'text-slate-500'}`}>
+            <p className={`text-sm font-bold ${refurbishment_notes ? 'text-slate-800 dark:text-slate-200' : 'text-slate-400 dark:text-slate-500'}`}>
               {refurbishment_notes || 'Not Required'}
             </p>
           </TrustCard>
@@ -330,12 +330,12 @@ export default function HealthCard() {
           {/* Item History / Timeline */}
           <TrustCard
             icon={<ClockIcon />}
-            iconBg="bg-gradient-to-tr from-orange-500/20 to-amber-400/10 border border-orange-500/30 text-orange-400"
+            iconBg="bg-gradient-to-tr from-orange-50 to-orange-100/50 dark:from-orange-500/20 dark:to-amber-950/10 border border-orange-200 dark:border-orange-500/30 text-orange-600 dark:text-orange-400"
             label="Item History"
             delay="500ms"
           >
             <button
-              className="cursor-pointer flex items-center gap-1.5 text-xs font-bold text-orange-500 hover:text-orange-400 transition"
+              className="cursor-pointer flex items-center gap-1.5 text-xs font-bold text-orange-600 dark:text-orange-500 hover:text-orange-700 dark:hover:text-orange-450 transition"
               onClick={() => setTimelineOpen(o => !o)}
               aria-expanded={timelineOpen}
             >
@@ -354,12 +354,12 @@ export default function HealthCard() {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 text-sm font-black text-slate-900 shadow-lg shadow-orange-500/20">
             a
           </div>
-          <p className="text-[10px] font-bold text-slate-400 text-center leading-relaxed uppercase tracking-widest">
+          <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 text-center leading-relaxed uppercase tracking-widest">
             Verified by Amazon Rehome AI · Condition evaluated in real-time
           </p>
           <Link
             to="/rehome"
-            className="mt-2 text-xs font-bold text-orange-500 hover:text-orange-400 flex items-center gap-1 transition-colors"
+            className="mt-2 text-xs font-bold text-orange-600 dark:text-orange-500 hover:text-orange-700 dark:hover:text-orange-400 flex items-center gap-1 transition-colors"
           >
             ← Browse Marketplace
           </Link>

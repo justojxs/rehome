@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --color-amazon-orange: #FF9900;
@@ -124,38 +126,73 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: #080c14;
-  color: #f1f5f9;
+  background-color: #f8fafc;
+  color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background-color: #080c14;
+  color: #f1f5f9;
 }
 
 /* ─── Glass morphism panels ─────────────────────────────────────── */
 .glass-panel {
-  background: rgba(17, 24, 39, 0.6);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dark .glass-panel {
+  background: rgba(17, 24, 39, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: none;
 }
 
 .dark-glass-panel {
-  background: rgba(10, 14, 23, 0.85);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dark .dark-glass-panel {
+  background: rgba(10, 14, 23, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
 }
 
 /* ─── Premium interaction cards ─────────────────────────────────── */
 .glow-card {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.dark .glow-card {
   background: rgba(17, 24, 39, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: none;
 }
 
 .glow-card:hover {
+  box-shadow: 0 10px 30px -10px rgba(255, 153, 0, 0.12), 0 0 15px -3px rgba(255, 153, 0, 0.03);
+  border-color: rgba(255, 153, 0, 0.25);
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.dark .glow-card:hover {
   box-shadow: 0 10px 30px -10px rgba(255, 153, 0, 0.25), 0 0 15px -3px rgba(255, 153, 0, 0.1);
   border-color: rgba(255, 153, 0, 0.35);
-  transform: translateY(-4px);
   background: rgba(17, 24, 39, 0.6);
 }
 
@@ -207,13 +244,28 @@ body {
 
 /* ─── Animated gradient background ──────────────────────────────── */
 .animated-gradient-bg {
-  background: linear-gradient(-45deg, #05070c, #0d121f, #05070c, #131929);
+  background: linear-gradient(-45deg, #f1f5f9, #e2e8f0, #f8fafc, #cbd5e1);
   background-size: 400% 400%;
   animation: gradient-shift 10s ease infinite;
+  transition: background-color 0.3s ease;
+}
+
+.dark .animated-gradient-bg {
+  background: linear-gradient(-45deg, #05070c, #0d121f, #05070c, #131929);
 }
 
 /* ─── Mesh gradient pattern ─────────────────────────────────────── */
 .mesh-gradient {
+  background: 
+    radial-gradient(at 20% 20%, rgba(255, 153, 0, 0.02) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, rgba(16, 185, 129, 0.02) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(59, 130, 246, 0.01) 0px, transparent 60%),
+    radial-gradient(at 0% 80%, rgba(255, 153, 0, 0.01) 0px, transparent 55%),
+    #f8fafc;
+  transition: background-color 0.3s ease;
+}
+
+.dark .mesh-gradient {
   background: 
     radial-gradient(at 20% 20%, rgba(255, 153, 0, 0.04) 0px, transparent 50%),
     radial-gradient(at 80% 10%, rgba(16, 185, 129, 0.03) 0px, transparent 50%),
@@ -254,12 +306,25 @@ body {
 /* ─── Product card hover lift ───────────────────────────────────── */
 .product-card-lift {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.dark .product-card-lift {
   background: rgba(17, 24, 39, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: none;
 }
 
 .product-card-lift:hover {
   transform: translateY(-6px);
+  border-color: rgba(255, 153, 0, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06), 0 0 25px -5px rgba(255, 153, 0, 0.04);
+}
+
+.dark .product-card-lift:hover {
   border-color: rgba(255, 153, 0, 0.25);
   background: rgba(17, 24, 39, 0.55);
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 25px -5px rgba(255, 153, 0, 0.08);
@@ -295,6 +360,10 @@ body {
 }
 
 ::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.dark ::-webkit-scrollbar-track {
   background: rgba(15, 23, 42, 0.2);
 }
 

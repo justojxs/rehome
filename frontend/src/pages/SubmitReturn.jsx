@@ -7,12 +7,12 @@ const RETURN_REASONS = ['Wrong Item', 'Defective', 'No Longer Needed', 'Changed 
 const CONDITIONS = ['Like New', 'Good', 'Fair', 'Poor']
 
 const inputClass =
-  'w-full rounded-xl border border-white/10 bg-slate-900/40 px-4 py-3.5 text-sm text-slate-100 ' +
-  'placeholder:text-slate-500 ' +
+  'w-full rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100/40 dark:bg-slate-900/40 px-4 py-3.5 text-sm text-slate-800 dark:text-slate-100 ' +
+  'placeholder:text-slate-400 dark:placeholder:text-slate-500 ' +
   'focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-400 ' +
-  'hover:border-white/15 transition-all duration-300 shadow-sm backdrop-blur-sm'
+  'hover:border-slate-300 dark:hover:border-white/15 transition-all duration-300 shadow-sm backdrop-blur-sm'
 
-const labelClass = 'block text-[11px] font-extrabold uppercase tracking-widest text-slate-400 mb-2'
+const labelClass = 'block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2'
 
 // ── Step indicator ────────────────────────────────────────────────────────────
 function StepIndicator({ step }) {
@@ -30,14 +30,14 @@ function StepIndicator({ step }) {
             <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-500 ${
               active
                 ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20'
-                : 'bg-slate-900/50 text-slate-500 border border-white/5'
+                : 'bg-slate-200/50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 border border-slate-200/50 dark:border-white/5'
             }`}>
               <span className="text-sm">{s.icon}</span>
               <span className="hidden sm:inline">{s.label}</span>
             </div>
             {i < steps.length - 1 && (
               <div className={`w-8 h-0.5 rounded-full transition-all duration-500 ${
-                i < step ? 'bg-orange-500' : 'bg-slate-800'
+                i < step ? 'bg-orange-500' : 'bg-slate-300 dark:bg-slate-800'
               }`} />
             )}
           </div>
@@ -51,9 +51,9 @@ function StepIndicator({ step }) {
 function FloatingOrbs() {
   return (
     <>
-      <div className="floating-orb bg-orange-400/20 w-72 h-72 -top-20 -right-20 animate-float" />
-      <div className="floating-orb bg-emerald-400/15 w-56 h-56 -bottom-20 -left-16 animate-float" style={{ animationDelay: '-2s' }} />
-      <div className="floating-orb bg-blue-400/10 w-40 h-40 top-1/2 right-10 animate-float" style={{ animationDelay: '-4s' }} />
+      <div className="floating-orb bg-orange-400/5 dark:bg-orange-400/20 w-72 h-72 -top-20 -right-20 animate-float" />
+      <div className="floating-orb bg-emerald-400/5 dark:bg-emerald-400/15 w-56 h-56 -bottom-20 -left-16 animate-float" style={{ animationDelay: '-2s' }} />
+      <div className="floating-orb bg-blue-400/5 dark:bg-blue-400/10 w-40 h-40 top-1/2 right-10 animate-float" style={{ animationDelay: '-4s' }} />
     </>
   )
 }
@@ -152,17 +152,17 @@ export default function SubmitReturn() {
       <main className="mx-auto max-w-xl relative z-10">
         {/* Page Header */}
         <div className="text-center mb-6 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold tracking-wide mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-bold tracking-wide mb-4">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
             </span>
             Amazon Rehome — AI Grading Portal
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Submit a Return
           </h1>
-          <p className="text-slate-400 text-sm mt-2 max-w-md mx-auto leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 max-w-md mx-auto leading-relaxed">
             Initiate a return. Our intelligent AI will instantly grade your product's resale viability and assign a sustainability score.
           </p>
         </div>
@@ -174,7 +174,7 @@ export default function SubmitReturn() {
 
         {/* Success Banner */}
         {success && (
-          <div className="mb-8 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-green-950/20 border border-emerald-500/25 p-6 shadow-lg shadow-black/20 animate-scale-in">
+          <div className="mb-8 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-green-500/5 dark:from-emerald-950/30 dark:to-green-950/20 border border-emerald-550/20 dark:border-emerald-500/25 p-6 shadow-lg shadow-black/[0.02] dark:shadow-black/20 animate-scale-in">
             <div className="flex gap-4">
               <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-tr from-emerald-500 to-green-400 flex items-center justify-center shadow-md shadow-emerald-500/20">
                 <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -182,9 +182,9 @@ export default function SubmitReturn() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-sm font-extrabold text-white">Return Submitted Successfully! 🎉</h3>
-                <p className="text-xs text-emerald-300 mt-1.5 leading-relaxed">
-                  Order ID: <span className="font-mono font-bold bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-500/20 text-emerald-200">{success.order_id}</span>. 
+                <h3 className="text-sm font-extrabold text-slate-800 dark:text-white">Return Submitted Successfully! 🎉</h3>
+                <p className="text-xs text-emerald-600 dark:text-emerald-300 mt-1.5 leading-relaxed">
+                  Order ID: <span className="font-mono font-bold bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-200">{success.order_id}</span>. 
                   Our computer vision models are ready to assess and price this listing.
                 </p>
                 <Link
@@ -203,16 +203,16 @@ export default function SubmitReturn() {
 
         {/* Error Banner */}
         {error && (
-          <div className="mb-8 rounded-2xl bg-gradient-to-r from-rose-950/30 to-red-950/20 border border-rose-500/25 p-5 shadow-lg shadow-black/20 animate-scale-in">
+          <div className="mb-8 rounded-2xl bg-gradient-to-r from-rose-500/10 to-red-500/5 dark:from-rose-950/30 dark:to-red-950/20 border border-rose-550/20 dark:border-rose-500/25 p-5 shadow-lg shadow-black/[0.02] dark:shadow-black/20 animate-scale-in">
             <div className="flex gap-3">
-              <div className="flex-shrink-0 h-8 w-8 rounded-full bg-rose-950 flex items-center justify-center border border-rose-500/30">
-                <svg className="h-4 w-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <div className="flex-shrink-0 h-8 w-8 rounded-full bg-rose-100 dark:bg-rose-950 flex items-center justify-center border border-rose-200 dark:border-rose-500/30">
+                <svg className="h-4 w-4 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Submission Failed</h3>
-                <p className="text-xs text-rose-300 mt-0.5">Please check the fields and try again.</p>
+                <h3 className="text-sm font-bold text-slate-800 dark:text-white">Submission Failed</h3>
+                <p className="text-xs text-rose-600 dark:text-rose-300 mt-0.5">Please check the fields and try again.</p>
               </div>
             </div>
           </div>
@@ -254,9 +254,9 @@ export default function SubmitReturn() {
                   onChange={handleField}
                   className={`${inputClass} cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222.5%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px] bg-[right_12px_center] bg-no-repeat pr-8`}
                 >
-                  <option value="" disabled className="bg-slate-900 text-slate-400">Select reason...</option>
+                  <option value="" disabled className="bg-white dark:bg-slate-900 text-slate-450 dark:text-slate-400">Select reason...</option>
                   {RETURN_REASONS.map(r => (
-                    <option key={r} value={r} className="bg-slate-900 text-white">{r}</option>
+                    <option key={r} value={r} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">{r}</option>
                   ))}
                 </select>
               </div>
@@ -274,9 +274,9 @@ export default function SubmitReturn() {
                   onChange={handleField}
                   className={`${inputClass} cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222.5%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px] bg-[right_12px_center] bg-no-repeat pr-8`}
                 >
-                  <option value="" disabled className="bg-slate-900 text-slate-400">Select condition...</option>
+                  <option value="" disabled className="bg-white dark:bg-slate-900 text-slate-455 dark:text-slate-400">Select condition...</option>
                   {CONDITIONS.map(c => (
-                    <option key={c} value={c} className="bg-slate-900 text-white">{c}</option>
+                    <option key={c} value={c} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">{c}</option>
                   ))}
                 </select>
               </div>
@@ -311,8 +311,8 @@ export default function SubmitReturn() {
                 onDrop={handleDrop}
                 className={`relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 group ${
                   dragActive
-                    ? 'border-orange-500 bg-orange-950/20 scale-[1.02]'
-                    : 'border-white/10 hover:border-orange-500/80 hover:bg-white/[0.02]'
+                    ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 scale-[1.02]'
+                    : 'border-slate-200 dark:border-white/10 hover:border-orange-500/80 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]'
                 }`}
               >
                 <input
@@ -326,13 +326,13 @@ export default function SubmitReturn() {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
                 <div className={`h-12 w-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                  dragActive ? 'bg-orange-950/50 scale-110' : 'bg-white/[0.04] group-hover:bg-orange-950/20'
+                  dragActive ? 'bg-orange-100 dark:bg-orange-950/50 scale-110' : 'bg-slate-100 dark:bg-white/[0.04] group-hover:bg-orange-100 dark:group-hover:bg-orange-950/20'
                 }`}>
-                  <svg className={`h-6 w-6 transition-colors duration-300 ${dragActive ? 'text-orange-400' : 'text-slate-450 group-hover:text-orange-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className={`h-6 w-6 transition-colors duration-300 ${dragActive ? 'text-orange-500 dark:text-orange-400' : 'text-slate-450 dark:text-slate-450 group-hover:text-orange-500 dark:group-hover:text-orange-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
                   </svg>
                 </div>
-                <p className="mt-3 text-xs font-bold text-slate-350">
+                <p className="mt-3 text-xs font-bold text-slate-600 dark:text-slate-355">
                   {dragActive ? 'Drop your images here' : 'Click to upload or drag and drop'}
                 </p>
                 <p className="text-[10px] text-slate-500 mt-1">JPG, PNG up to 10MB each</p>
@@ -342,7 +342,7 @@ export default function SubmitReturn() {
               {previews.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-3">
                   {previews.map((src, i) => (
-                    <div key={i} className="relative group/thumb h-20 w-20 rounded-xl overflow-hidden border-2 border-white/5 bg-slate-900/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    <div key={i} className="relative group/thumb h-20 w-20 rounded-xl overflow-hidden border-2 border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-slate-900/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                       <img
                         src={src}
                         alt={`preview ${i + 1}`}
@@ -391,21 +391,21 @@ export default function SubmitReturn() {
         {/* Trust badge */}
         <div className="mt-6 flex items-center justify-center gap-4 text-[10px] text-slate-500 font-bold uppercase tracking-wider animate-fade-in-up" style={{ animationDelay: '400ms' }}>
           <div className="flex items-center gap-1.5">
-            <svg className="h-3.5 w-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="h-3.5 w-3.5 text-emerald-550 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
             </svg>
             Secure Upload
           </div>
-          <span className="text-slate-800">•</span>
+          <span className="text-slate-300 dark:text-slate-800">•</span>
           <div className="flex items-center gap-1.5">
-            <svg className="h-3.5 w-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="h-3.5 w-3.5 text-blue-550 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
             </svg>
             AI-Powered Grading
           </div>
-          <span className="text-slate-800">•</span>
+          <span className="text-slate-300 dark:text-slate-800">•</span>
           <div className="flex items-center gap-1.5">
-            <svg className="h-3.5 w-3.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="h-3.5 w-3.5 text-orange-550 dark:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Instant Results

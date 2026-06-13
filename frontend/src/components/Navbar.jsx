@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
 
 const NAV_LINKS = [
   { to: '/',           label: 'Submit Return', end: true  },
@@ -40,11 +41,28 @@ function CloseIcon() {
   )
 }
 
+function SunIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+    </svg>
+  )
+}
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { isDark, toggleTheme } = useTheme()
 
   return (
-    <nav className="sticky top-0 z-50 w-full dark-glass-panel border-b border-white/[0.05] shadow-lg shadow-black/25 bg-[#080c14]/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 w-full dark-glass-panel border-b border-slate-200/50 dark:border-white/[0.05] shadow-md shadow-black/[0.02] dark:shadow-black/25 bg-white/80 dark:bg-[#080c14]/80 backdrop-blur-xl transition-colors duration-300">
       {/* Main bar */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -55,10 +73,10 @@ export default function Navbar() {
             className="flex items-center gap-3.5 flex-shrink-0 group"
             aria-label="Amazon Rehome home"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded bg-gradient-to-tr from-amber-500 to-orange-400 text-sm font-black text-slate-950 leading-none shadow-[0_0_12px_rgba(245,158,11,0.3)] transition-all duration-300 group-hover:scale-105">
+            <div className="flex h-9 w-9 items-center justify-center rounded bg-gradient-to-tr from-amber-500 to-orange-400 text-sm font-black text-slate-900 leading-none shadow-[0_0_12px_rgba(245,158,11,0.3)] transition-all duration-300 group-hover:scale-105">
               a
             </div>
-            <span className="text-white font-extrabold text-lg tracking-tight transition-colors duration-300 group-hover:text-orange-400 flex items-center gap-2">
+            <span className="text-slate-900 dark:text-white font-extrabold text-lg tracking-tight transition-colors duration-300 group-hover:text-orange-500 dark:group-hover:text-orange-400 flex items-center gap-2">
               Amazon <span className="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Rehome</span>
             </span>
           </Link>
@@ -72,7 +90,7 @@ export default function Navbar() {
                 end={end}
                 className={({ isActive }) => 
                   `relative flex items-center gap-1.5 text-sm font-semibold py-2 transition-all duration-300 ${
-                    isActive ? 'text-orange-400 font-bold' : 'text-slate-300 hover:text-white'
+                    isActive ? 'text-orange-500 dark:text-orange-400 font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                   }`
                 }
               >
@@ -94,16 +112,25 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Right — icons + hamburger */}
-          <div className="flex items-center gap-5 text-slate-300">
-            <button aria-label="Cart" className="hover:text-orange-400 transition-colors duration-300 cursor-pointer group">
+          {/* Right — theme toggle + icons + hamburger */}
+          <div className="flex items-center gap-5 text-slate-600 dark:text-slate-300">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-lg border border-slate-200 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-orange-500 dark:hover:text-orange-400 transition-all duration-300 cursor-pointer group"
+              aria-label="Toggle theme"
+            >
+              {isDark ? <SunIcon /> : <MoonIcon />}
+            </button>
+
+            <button aria-label="Cart" className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors duration-300 cursor-pointer group">
               <CartIcon />
             </button>
-            <button aria-label="Account" className="hover:text-orange-400 transition-colors duration-300 cursor-pointer group">
+            <button aria-label="Account" className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors duration-300 cursor-pointer group">
               <PersonIcon />
             </button>
             <button
-              className="md:hidden hover:text-orange-400 transition-colors cursor-pointer"
+              className="md:hidden hover:text-orange-500 dark:hover:text-orange-400 transition-colors cursor-pointer"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               onClick={() => setMenuOpen(prev => !prev)}
             >
@@ -116,7 +143,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown */}
       {menuOpen && (
-        <div className="md:hidden border-t border-slate-800 bg-[#0f172a]/95 backdrop-blur-lg animate-fade-in-up">
+        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-lg animate-fade-in-up">
           <div className="space-y-1 px-2 py-3">
             {NAV_LINKS.map(({ to, label, end, live }) => (
               <NavLink
@@ -126,15 +153,15 @@ export default function Navbar() {
                 className={({ isActive }) =>
                   `flex items-center justify-between rounded-md px-3 py-2.5 text-base font-semibold transition-all duration-300 ${
                     isActive
-                      ? 'bg-slate-800 text-orange-400 border-l-4 border-orange-400'
-                      : 'text-slate-300 hover:bg-slate-800 hover:text-white border-l-4 border-transparent'
+                      ? 'bg-slate-100 dark:bg-slate-800 text-orange-500 dark:text-orange-400 border-l-4 border-orange-500 dark:border-orange-400'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white border-l-4 border-transparent'
                   }`
                 }
                 onClick={() => setMenuOpen(false)}
               >
                 <span>{label}</span>
                 {live && (
-                  <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                  <span className="flex items-center gap-1.5 text-xs text-emerald-500 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     Live
                   </span>
