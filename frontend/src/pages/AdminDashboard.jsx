@@ -5,30 +5,65 @@ import LeafRating from '../components/LeafRating'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
-// ── Summary card ──────────────────────────────────────────────────────────────
-function SummaryCard({ label, value, borderColor }) {
+// ── Circular Progress Ring ────────────────────────────────────────────────────
+// ── Circular Progress Ring ────────────────────────────────────────────────────
+function CircularProgress({ value, size = 48, strokeWidth = 4, color = '#FF9900' }) {
+  const radius = (size - strokeWidth) / 2
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (value / 100) * circumference
   return (
-    <div
-      className="bg-white rounded-lg shadow-sm px-5 py-4 flex flex-col gap-1 border-t-4"
-      style={{ borderTopColor: borderColor }}
-    >
-      <span className="text-2xl font-bold text-gray-800">{value}</span>
-      <span className="text-xs text-gray-500 font-medium uppercase tracking-wide">{label}</span>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+      <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="currentColor" className="text-slate-200 dark:text-slate-800" strokeWidth={strokeWidth} />
+      <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round"
+        strokeDasharray={circumference} strokeDashoffset={offset}
+        className="transition-all duration-1000 ease-out" />
+    </svg>
+  )
+}
+
+// ── Summary card ──────────────────────────────────────────────────────────────
+function SummaryCard({ label, value, colorClass, icon, total }) {
+  const pct = total > 0 ? Math.round((value / total) * 100) : 0
+  const colors = {
+    orange: { ring: '#FF9900', bg: 'stat-card-orange' },
+    amber: { ring: '#f59e0b', bg: 'stat-card-amber' },
+    emerald: { ring: '#10b981', bg: 'stat-card-emerald' },
+    rose: { ring: '#ef4444', bg: 'stat-card-rose' },
+  }
+  const c = colors[colorClass] || colors.orange
+  return (
+    <div className={`${c.bg} rounded-2xl border border-slate-200/50 dark:border-white/5 shadow-md shadow-black/[0.01] dark:shadow-black/20 px-6 py-5 flex items-center justify-between
+                     transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-default group`}>
+      <div className="flex flex-col gap-1.5">
+        <span className="text-[10px] font-extrabold text-slate-500 dark:text-slate-455 uppercase tracking-widest">{label}</span>
+        <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tight animate-count-up">{value}</span>
+      </div>
+      <div className="relative h-12 w-12 flex items-center justify-center">
+        <CircularProgress value={pct || (value > 0 ? 100 : 0)} size={48} color={c.ring} />
+        <div className="absolute inset-0 flex items-center justify-center text-slate-500 dark:text-slate-455 group-hover:scale-110 transition-transform duration-300">
+          {icon}
+        </div>
+      </div>
     </div>
   )
 }
 
 // ── Confidence bar ─────────────────────────────────────────────────────────────
 function ConfidenceBar({ value }) {
-  if (value == null) return <span className="text-xs text-gray-400">Pending</span>
+  if (value == null) return <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Pending</span>
   const pct = Math.min(100, Math.max(0, value))
-  const color = pct >= 85 ? '#22c55e' : pct >= 70 ? '#f59e0b' : '#ef4444'
+  const color = pct >= 85 ? '#10b981' : pct >= 70 ? '#f59e0b' : '#ef4444'
+  const badgeStyle = pct >= 85
+    ? 'bg-emerald-100/50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-500/20'
+    : pct >= 70
+    ? 'bg-amber-100/50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200/50 dark:border-amber-500/20'
+    : 'bg-rose-100/50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200/50 dark:border-rose-500/20'
   return (
-    <div className="flex items-center gap-2 min-w-[80px]">
-      <div className="flex-1 h-1.5 rounded-full bg-gray-200 overflow-hidden">
-        <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: color }} />
+    <div className="flex items-center gap-2.5 min-w-[100px]">
+      <div className="flex-1 h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+        <div className="h-full rounded-full transition-all duration-700 ease-out" style={{ width: `${pct}%`, backgroundColor: color }} />
       </div>
-      <span className="text-xs text-gray-500 w-7 text-right">{pct}%</span>
+      <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${badgeStyle}`}>{pct}%</span>
     </div>
   )
 }
@@ -38,8 +73,8 @@ function SkeletonRow() {
   return (
     <tr className="animate-pulse">
       {Array.from({ length: 8 }).map((_, i) => (
-        <td key={i} className="px-4 py-3">
-          <div className="h-3 bg-gray-200 rounded w-full" />
+        <td key={i} className="px-5 py-5">
+          <div className="h-4 bg-slate-200 dark:bg-slate-800/60 rounded-lg w-full shimmer-bg" />
         </td>
       ))}
     </tr>
@@ -49,9 +84,42 @@ function SkeletonRow() {
 // ── Spinner ───────────────────────────────────────────────────────────────────
 function Spinner() {
   return (
-    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg className="animate-spin h-3.5 w-3.5 text-current" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+    </svg>
+  )
+}
+
+// ── Icons for Summary Cards ───────────────────────────────────────────────────
+function PackageIcon() {
+  return (
+    <svg className="h-5 w-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+    </svg>
+  )
+}
+
+function ClockIcon() {
+  return (
+    <svg className="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  )
+}
+
+function GlobeIcon() {
+  return (
+    <svg className="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+    </svg>
+  )
+}
+
+function TrashIcon() {
+  return (
+    <svg className="h-5 w-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
     </svg>
   )
 }
@@ -75,7 +143,7 @@ export default function AdminDashboard() {
     }
   }, [])
 
-  // Initial fetch + 5s poll
+  // Initial fetch + 30s poll
   useEffect(() => {
     fetchReturns()
     const interval = setInterval(fetchReturns, 30000)
@@ -143,71 +211,97 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen py-10 mesh-gradient">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* Page title */}
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h1>
+        {/* Page header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4 animate-fade-in-up">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 text-orange-600 dark:text-orange-400 text-[10px] font-bold tracking-widest mb-3">
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+              </svg>
+              OPERATIONS CONTROL CENTER
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Admin Dashboard</h1>
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-1.5 leading-relaxed">
+              Monitor returns, trigger AI automated condition grading, and approve regional marketplace listings.
+            </p>
+          </div>
+          <button
+            onClick={fetchReturns}
+            className="self-start sm:self-center inline-flex items-center gap-2.5 rounded-xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 px-5 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-350 dark:hover:border-white/20 cursor-pointer shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <svg className="h-4 w-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+            Sync Data
+          </button>
+        </div>
 
         {/* Summary cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <SummaryCard label="Total Returns"          value={total}              borderColor="#FF9900" />
-          <SummaryCard label="Pending Grading"        value={pending}            borderColor="#f59e0b" />
-          <SummaryCard label="Listed on Rehome"       value={listed}             borderColor="#22c55e" />
-          <SummaryCard label="Donated / Liquidated"   value={donatedOrLiquidated} borderColor="#ef4444" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+          <SummaryCard label="Total Returns"         value={total}               colorClass="orange"  icon={<PackageIcon />} total={total} />
+          <SummaryCard label="Pending AI Grading"    value={pending}             colorClass="amber"   icon={<ClockIcon />}   total={total} />
+          <SummaryCard label="Listed on Rehome"      value={listed}              colorClass="emerald" icon={<GlobeIcon />}   total={total} />
+          <SummaryCard label="Donated / Liquidated"  value={donatedOrLiquidated} colorClass="rose"    icon={<TrashIcon />}   total={total} />
         </div>
 
         {/* Table card */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="glass-panel rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left">
-                  {['Order ID', 'Product Name', 'Return Reason', 'Customer Condition',
-                    'AI Grade', 'Confidence', 'Routing Decision', 'Actions'].map(col => (
+                <tr className="border-b border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-slate-900/40">
+                  {['Order ID', 'Product Details', 'Reason', 'Customer Declared',
+                    'AI Grade Assessment', 'Confidence Score', 'Routing Decision', 'Operation Action'].map(col => (
                     <th
                       key={col}
-                      className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap"
+                      className="px-5 py-4 text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap"
                     >
                       {col}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04] text-sm">
                 {loading
                   ? Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)
-                  : returns.map(row => {
+                  : returns.map((row, index) => {
                       const busy = actionLoading[row.id]
                       const canGrade   = row.status === 'pending_grading'
                       const canApprove = row.status === 'graded' &&
                         row.routing_decision === 'Resell on Amazon Rehome'
 
                       return (
-                        <tr key={row.id} className="hover:bg-orange-50 transition-colors">
+                        <tr
+                          key={row.id}
+                          className="table-row-stagger hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors duration-200"
+                          style={{ '--stagger-delay': `${index * 80}ms` }}
+                        >
                           {/* Order ID */}
-                          <td className="px-4 py-3 font-mono text-xs text-gray-600 whitespace-nowrap">
-                            {row.order_id}
+                          <td className="px-5 py-5 whitespace-nowrap">
+                            <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 px-2.5 py-1 rounded-md">{row.order_id}</span>
                           </td>
 
                           {/* Product Name */}
-                          <td className="px-4 py-3 text-gray-800 font-medium max-w-[180px]">
-                            <span className="line-clamp-2">{row.product_name}</span>
+                          <td className="px-5 py-5 text-slate-900 dark:text-slate-100 font-bold max-w-[200px]">
+                            <span className="line-clamp-2 leading-relaxed" title={row.product_name}>{row.product_name}</span>
                           </td>
 
                           {/* Return Reason */}
-                          <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
-                            {row.return_reason}
+                          <td className="px-5 py-5 whitespace-nowrap">
+                            <span className="text-xs font-bold text-slate-600 dark:text-slate-350 bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 px-2.5 py-1 rounded-full">{row.return_reason}</span>
                           </td>
 
                           {/* Customer Condition */}
-                          <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                          <td className="px-5 py-5 text-slate-700 dark:text-slate-300 font-semibold whitespace-nowrap">
                             {row.customer_condition}
                           </td>
 
                           {/* AI Grade */}
-                          <td className="px-4 py-3">
-                            <div className="flex flex-col gap-1.5">
+                          <td className="px-5 py-5">
+                            <div className="flex flex-col gap-2 items-start">
                               <ConditionBadge tier={row.ai_condition_tier || 'Pending'} />
                               {row.ai_confidence != null && (
                                 <LeafRating rating={confidenceToLeaves(row.ai_confidence)} />
@@ -216,29 +310,51 @@ export default function AdminDashboard() {
                           </td>
 
                           {/* Confidence */}
-                          <td className="px-4 py-3">
+                          <td className="px-5 py-5">
                             <ConfidenceBar value={row.ai_confidence} />
                           </td>
 
                           {/* Routing Decision */}
-                          <td className="px-4 py-3 text-gray-700 max-w-[160px]">
-                            {row.routing_decision
-                              ? <span className="text-xs">{row.routing_decision}</span>
-                              : <span className="text-xs text-gray-400">Pending</span>
-                            }
+                          <td className="px-5 py-5 text-slate-700 whitespace-nowrap">
+                            {row.routing_decision ? (
+                              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-extrabold tracking-wide border ${
+                                row.routing_decision.includes('Resell')
+                                  ? 'bg-emerald-100/50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200/50 dark:border-emerald-500/20'
+                                  : row.routing_decision.includes('Refurbish')
+                                  ? 'bg-blue-100/50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-500/20'
+                                  : 'bg-rose-100/50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200/50 dark:border-rose-500/20'
+                              }`}>
+                                <span className={`h-1.5 w-1.5 rounded-full ${
+                                  row.routing_decision.includes('Resell') ? 'bg-emerald-500'
+                                  : row.routing_decision.includes('Refurbish') ? 'bg-blue-500'
+                                  : 'bg-rose-500'
+                                }`} />
+                                {row.routing_decision}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-slate-500 font-bold italic uppercase tracking-wider">
+                                Pending assessment
+                              </span>
+                            )}
                           </td>
 
                           {/* Actions */}
-                          <td className="px-4 py-3">
-                            <div className="flex flex-col gap-1.5 min-w-[130px]">
+                          <td className="px-5 py-5 whitespace-nowrap">
+                            <div className="flex flex-col gap-2.5 min-w-[140px]">
                               {canGrade && (
                                 <button
                                   onClick={() => handleGrade(row.id)}
                                   disabled={!!busy}
-                                  className="inline-flex items-center justify-center gap-1.5 rounded px-3 py-1.5 text-xs font-semibold text-gray-900 disabled:opacity-60 disabled:cursor-not-allowed transition hover:opacity-90"
-                                  style={{ backgroundColor: '#FF9900' }}
+                                  className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-[11px] font-extrabold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:shadow-lg hover:shadow-orange-500/20 hover:-translate-y-0.5 shadow-sm transition-all duration-300 whitespace-nowrap"
                                 >
-                                  {busy === 'grade' ? <><Spinner /> Grading…</> : 'Grade Now'}
+                                  {busy === 'grade' ? <><Spinner /> Grading...</> : (
+                                    <>
+                                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                                      </svg>
+                                      Grade Now
+                                    </>
+                                  )}
                                 </button>
                               )}
 
@@ -246,16 +362,27 @@ export default function AdminDashboard() {
                                 <button
                                   onClick={() => handleApprove(row.id)}
                                   disabled={!!busy}
-                                  className="inline-flex items-center justify-center gap-1.5 rounded px-3 py-1.5 text-xs font-semibold text-white bg-green-600 hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
+                                  className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-[11px] font-extrabold text-white bg-gradient-to-r from-emerald-600 to-green-500 hover:shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 shadow-sm transition-all duration-300 whitespace-nowrap"
                                 >
-                                  {busy === 'approve' ? <><Spinner /> Approving…</> : 'Approve for Rehome'}
+                                  {busy === 'approve' ? <><Spinner /> Approving...</> : (
+                                    <>
+                                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      </svg>
+                                      Approve for Rehome
+                                    </>
+                                  )}
                                 </button>
                               )}
 
                               <button
                                 onClick={() => navigate(`/health/${row.id}`)}
-                                className="inline-flex items-center justify-center rounded px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 transition"
+                                className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-900/40 px-4 py-2.5 text-[11px] font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 hover:border-slate-350 dark:hover:border-white/20 transition-all shadow-sm whitespace-nowrap"
                               >
+                                <svg className="h-3.5 w-3.5 text-slate-500 dark:text-slate-550" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
                                 View Health Card
                               </button>
                             </div>
@@ -267,8 +394,14 @@ export default function AdminDashboard() {
             </table>
 
             {!loading && returns.length === 0 && (
-              <div className="py-16 text-center text-gray-400 text-sm">
-                No returns found.
+              <div className="py-24 text-center">
+                <div className="h-16 w-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-900/50 flex items-center justify-center border border-slate-200 dark:border-white/10 mb-4 shadow-lg shadow-black/[0.01] dark:shadow-black/10">
+                  <svg className="h-8 w-8 text-slate-500 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-350">No returns found</p>
+                <p className="text-xs text-slate-500 mt-1">Submit a return to see it appear here.</p>
               </div>
             )}
           </div>

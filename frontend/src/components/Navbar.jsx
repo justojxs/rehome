@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
 
 const NAV_LINKS = [
   { to: '/',           label: 'Submit Return', end: true  },
@@ -10,7 +11,7 @@ const NAV_LINKS = [
 
 function CartIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.4 7h12.8M9 21a1 1 0 100-2 1 1 0 000 2zm10 0a1 1 0 100-2 1 1 0 000 2z" />
     </svg>
   )
@@ -18,7 +19,7 @@ function CartIcon() {
 
 function PersonIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
     </svg>
   )
@@ -40,27 +41,28 @@ function CloseIcon() {
   )
 }
 
-function desktopLinkClass({ isActive }) {
-  return [
-    'flex items-center gap-1.5 text-sm font-medium text-white transition-colors',
-    'hover:text-orange-400 pb-1 border-b-2',
-    isActive ? 'border-orange-400 text-orange-400' : 'border-transparent',
-  ].join(' ')
+function SunIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+    </svg>
+  )
 }
 
-function mobileLinkClass({ isActive }) {
-  return [
-    'flex items-center gap-2 px-4 py-3 text-sm font-medium text-white',
-    'transition-colors hover:bg-gray-700 hover:text-orange-400 border-l-4',
-    isActive ? 'text-orange-400 border-orange-400 pl-3' : 'border-transparent',
-  ].join(' ')
+function MoonIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+    </svg>
+  )
 }
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { isDark, toggleTheme } = useTheme()
 
   return (
-    <nav style={{ backgroundColor: '#131921' }} className="w-full shadow-md">
+    <nav className="sticky top-0 z-50 w-full dark-glass-panel border-b border-slate-200/50 dark:border-white/[0.05] shadow-md shadow-black/[0.02] dark:shadow-black/25 bg-white/80 dark:bg-[#080c14]/80 backdrop-blur-xl transition-colors duration-300">
       {/* Main bar */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -68,47 +70,67 @@ export default function Navbar() {
           {/* Left — logo (links to /rehome) */}
           <Link
             to="/rehome"
-            className="flex items-center gap-3 flex-shrink-0 group"
+            className="flex items-center gap-3.5 flex-shrink-0 group"
             aria-label="Amazon Rehome home"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded bg-orange-400 text-xs font-bold text-white leading-none group-hover:bg-orange-500 transition-colors">
-              A
+            <div className="flex h-9 w-9 items-center justify-center rounded bg-gradient-to-tr from-amber-500 to-orange-400 text-sm font-black text-slate-900 leading-none shadow-[0_0_12px_rgba(245,158,11,0.3)] transition-all duration-300 group-hover:scale-105">
+              a
             </div>
-            <span className="text-white font-semibold text-base whitespace-nowrap group-hover:text-orange-400 transition-colors">
-              Amazon Rehome
+            <span className="text-slate-900 dark:text-white font-extrabold text-lg tracking-tight transition-colors duration-300 group-hover:text-orange-500 dark:group-hover:text-orange-400 flex items-center gap-2">
+              Amazon <span className="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Rehome</span>
             </span>
           </Link>
 
           {/* Centre — desktop nav links */}
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map(({ to, label, end, live }) => (
-              <NavLink key={to} to={to} end={end} className={desktopLinkClass}>
-                {label}
-                {live && (
-                  <span
-                    className="relative flex h-2 w-2"
-                    title="Live"
-                    aria-label="Live marketplace"
-                  >
-                    {/* Ping animation */}
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-                  </span>
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                className={({ isActive }) => 
+                  `relative flex items-center gap-1.5 text-sm font-semibold py-2 transition-all duration-300 ${
+                    isActive ? 'text-orange-500 dark:text-orange-400 font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <span>{label}</span>
+                    {live && (
+                      <span className="relative flex h-2 w-2" title="Live" aria-label="Live marketplace">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                      </span>
+                    )}
+                    {isActive && (
+                      <span className="absolute bottom-[-16px] left-1/2 -translate-x-1/2 h-1 w-6 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 shadow-[0_0_8px_#ff9900]" />
+                    )}
+                  </>
                 )}
               </NavLink>
             ))}
           </div>
 
-          {/* Right — icons + hamburger */}
-          <div className="flex items-center gap-4 text-white">
-            <button aria-label="Cart" className="hover:text-orange-400 transition-colors">
+          {/* Right — theme toggle + icons + hamburger */}
+          <div className="flex items-center gap-5 text-slate-600 dark:text-slate-300">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-lg border border-slate-200 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-orange-500 dark:hover:text-orange-400 transition-all duration-300 cursor-pointer group"
+              aria-label="Toggle theme"
+            >
+              {isDark ? <SunIcon /> : <MoonIcon />}
+            </button>
+
+            <button aria-label="Cart" className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors duration-300 cursor-pointer group">
               <CartIcon />
             </button>
-            <button aria-label="Account" className="hover:text-orange-400 transition-colors">
+            <button aria-label="Account" className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors duration-300 cursor-pointer group">
               <PersonIcon />
             </button>
             <button
-              className="md:hidden hover:text-orange-400 transition-colors"
+              className="md:hidden hover:text-orange-500 dark:hover:text-orange-400 transition-colors cursor-pointer"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               onClick={() => setMenuOpen(prev => !prev)}
             >
@@ -121,27 +143,32 @@ export default function Navbar() {
 
       {/* Mobile dropdown */}
       {menuOpen && (
-        <div className="md:hidden border-t border-gray-700">
-          {NAV_LINKS.map(({ to, label, end, live }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={mobileLinkClass}
-              onClick={() => setMenuOpen(false)}
-            >
-              {label}
-              {live && (
-                <span
-                  className="flex items-center gap-1 text-xs text-green-400 font-normal"
-                  title="Live"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                  Live
-                </span>
-              )}
-            </NavLink>
-          ))}
+        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-lg animate-fade-in-up">
+          <div className="space-y-1 px-2 py-3">
+            {NAV_LINKS.map(({ to, label, end, live }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                className={({ isActive }) =>
+                  `flex items-center justify-between rounded-md px-3 py-2.5 text-base font-semibold transition-all duration-300 ${
+                    isActive
+                      ? 'bg-slate-100 dark:bg-slate-800 text-orange-500 dark:text-orange-400 border-l-4 border-orange-500 dark:border-orange-400'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white border-l-4 border-transparent'
+                  }`
+                }
+                onClick={() => setMenuOpen(false)}
+              >
+                <span>{label}</span>
+                {live && (
+                  <span className="flex items-center gap-1.5 text-xs text-emerald-500 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Live
+                  </span>
+                )}
+              </NavLink>
+            ))}
+          </div>
         </div>
       )}
     </nav>

@@ -1,33 +1,33 @@
 const TIER_STYLES = {
   'Like New': {
-    bg: '#22c55e',
-    text: '#fff',
-    darkText: false,
+    bg: 'rgba(16, 185, 129, 0.15)',
+    border: 'rgba(16, 185, 129, 0.3)',
+    text: '#34d399',
   },
   'Good': {
-    bg: '#0d9488',
-    text: '#fff',
-    darkText: false,
+    bg: 'rgba(13, 148, 136, 0.15)',
+    border: 'rgba(13, 148, 136, 0.3)',
+    text: '#2dd4bf',
   },
   'Acceptable': {
-    bg: '#f59e0b',
-    text: '#1c1917',
-    darkText: true,
+    bg: 'rgba(245, 158, 11, 0.15)',
+    border: 'rgba(245, 158, 11, 0.3)',
+    text: '#fbbf24',
   },
   'Liquidate': {
-    bg: '#ef4444',
-    text: '#fff',
-    darkText: false,
+    bg: 'rgba(239, 68, 68, 0.15)',
+    border: 'rgba(239, 68, 68, 0.3)',
+    text: '#f87171',
   },
   'Human Review Required': {
-    bg: '#8b5cf6',
-    text: '#fff',
-    darkText: false,
+    bg: 'rgba(139, 92, 246, 0.15)',
+    border: 'rgba(139, 92, 246, 0.3)',
+    text: '#a78bfa',
   },
   'Pending': {
-    bg: '#6b7280',
-    text: '#fff',
-    darkText: false,
+    bg: 'rgba(107, 114, 128, 0.15)',
+    border: 'rgba(107, 114, 128, 0.3)',
+    text: '#9ca3af',
   },
 }
 
@@ -58,8 +58,8 @@ export default function ConditionBadge({ tier }) {
 
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold leading-none"
-      style={{ backgroundColor: style.bg, color: style.text }}
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold leading-none border"
+      style={{ backgroundColor: style.bg, borderColor: style.border, color: style.text }}
       aria-label={`Condition: ${normalised}`}
     >
       {showCheck && <CheckIcon />}

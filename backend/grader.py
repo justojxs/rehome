@@ -22,7 +22,7 @@ MISTRAL_KEYS = [v for k in [
 
 # ── Model config ──────────────────────────────────────────────────────────────
 
-GEMINI_MODELS   = ['gemini-2.0-flash-lite', 'gemini-2.0-flash']
+GEMINI_MODELS   = ['gemini-2.0-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash']
 GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models'
 
 MISTRAL_MODEL = 'pixtral-12b-2409'
@@ -52,14 +52,13 @@ def image_to_b64(path: str) -> tuple[str, str]:
         return base64.b64encode(f.read()).decode(), mime
 
 def parse_json(text: str) -> dict:
-    # Strip markdown fences if model wraps with them
+    # Strip markdown fences and find JSON block
     text = text.strip()
-    if text.startswith(''):
-        parts = text.split('')
-        text = parts[1] if len(parts) > 1 else text
-        if text.startswith('json'):
-            text = text[4:]
-    return json.loads(text.strip())
+    start_idx = text.find('{')
+    end_idx = text.rfind('}')
+    if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+        text = text[start_idx:end_idx+1]
+    return json.loads(text)
 
 def is_quota_error(status: int, body: str) -> bool:
     return status == 429 or (status == 403 and 'quota' in body.lower())
@@ -75,7 +74,7 @@ def try_gemini(image_path: str, return_reason: str, product_name: str) -> dict |
     payload = {
         'contents': [{'parts': [
             {'text': f'Product: {product_name}\nReturn reason: {return_reason}\n\n{GRADING_PROMPT}'},
-            {'inline_data': {'mime_type': mime, 'data': b64}},
+            {'inlineData': {'mimeType': mime, 'data': b64}},
         ]}],
         'generationConfig': {'temperature': 0.4, 'maxOutputTokens': 500},
     }
