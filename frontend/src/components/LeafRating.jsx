@@ -4,7 +4,7 @@ function Leaf({ filled }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      fill={filled ? '#16a34a' : '#d1d5db'}
+      fill={filled ? '#10b981' : '#27272a'}
       width="20"
       height="20"
       aria-hidden="true"
@@ -43,7 +43,7 @@ export default function LeafRating({ rating = 0 }) {
           <Leaf key={i} filled={i < filledCount} />
         ))}
       </div>
-      <p className="text-xs text-gray-400 tracking-wide">
+      <p className="text-xs text-slate-400 tracking-wide">
         {clamped}/5 — AI Verified Condition
       </p>
     </div>

@@ -44,7 +44,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <nav className="sticky top-0 z-50 w-full dark-glass-panel border-b border-slate-800 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.3)] bg-[#0f172a]/95">
+    <nav className="sticky top-0 z-50 w-full dark-glass-panel border-b border-white/[0.05] shadow-lg shadow-black/25 bg-[#080c14]/80 backdrop-blur-xl">
       {/* Main bar */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
